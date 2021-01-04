@@ -33,8 +33,9 @@ X, y = get_x_y(raw_data)
 # select the best 15 features from the dataset
 s_f = f_classif
 sel = SelectKBest(score_func=s_f, k=15)
+
+cols = X.columns.tolist()
 X = sel.fit_transform(X, y)
-cols = raw_data.columns.tolist()
 important_features = [cols[i] for i in sel.get_support(indices=True)]
 
 
