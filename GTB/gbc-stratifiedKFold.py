@@ -1,13 +1,18 @@
 import pandas as pd
+import seaborn
+from imblearn.metrics import classification_report_imbalanced
+from numpy import mean
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.metrics import (accuracy_score, balanced_accuracy_score,
-                             classification_report, roc_auc_score)
-from sklearn.model_selection import train_test_split
-from imblearn.metrics import classification_report_imbalanced
+                             classification_report, f1_score, make_scorer,
+                             roc_auc_score)
+from sklearn.model_selection import (StratifiedKFold, cross_validate,
+                                     train_test_split)
 
 from utils import *
 
+rs = 42
 feature_selection = False
 file_path = "../dataset/processed.csv"
 raw_data = pd.read_csv(file_path)
@@ -34,11 +39,10 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, shuffle=True, random_state=42)
 
 
-model = GradientBoostingClassifier(random_state=42)
+model = GradientBoostingClassifier(random_state=rs)
+
 
 model.fit(X_train, y_train)
 y_hat = model.predict(X_test)
-y_hat_train = model.predict(X_train)
 
 print(classification_report_imbalanced(y_hat, y_test))
-print(classification_report_imbalanced(y_hat_train, y_train))
