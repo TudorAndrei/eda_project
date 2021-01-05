@@ -1,10 +1,12 @@
+import matplotlib.pyplot as plt
 import pandas as pd
+from imblearn.metrics import classification_report_imbalanced
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.metrics import (accuracy_score, balanced_accuracy_score,
-                             classification_report, roc_auc_score)
+                             classification_report, plot_confusion_matrix,
+                             roc_auc_score)
 from sklearn.model_selection import train_test_split
-from imblearn.metrics import classification_report_imbalanced
 
 from utils import *
 
@@ -40,5 +42,11 @@ model.fit(X_train, y_train)
 y_hat = model.predict(X_test)
 y_hat_train = model.predict(X_train)
 
-print(classification_report_imbalanced(y_hat, y_test))
-print(classification_report_imbalanced(y_hat_train, y_train))
+print(classification_report_imbalanced(y_test, y_hat))
+print(classification_report_imbalanced(y_train, y_hat_train))
+
+disp = plot_confusion_matrix(model, X_test, y_test,
+                             cmap=plt.cm.Blues)
+disp.ax_.set_title('title')
+
+plt.show()
